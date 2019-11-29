@@ -55,7 +55,6 @@ Examples
   rds-payload-generator -d /srv/redis-split -k 35000 -r 10
   Run tool with custom settings
 
-
 ```
 
 ### Build Status
