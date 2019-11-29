@@ -42,10 +42,12 @@ const (
 	OPT_VER      = "v:version"
 )
 
+// START_PORT start port
 const START_PORT = 63000
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// RedisStore is Redis connection pull
 type RedisStore struct {
 	clients map[string]*redy.Client
 }
@@ -182,6 +184,7 @@ func getPause() time.Duration {
 	return time.Duration(r * float64(time.Second))
 }
 
+// getKey returns key name with random suffix
 func getKey(max int) string {
 	return "KEY" + strconv.Itoa(rand.Int(max))
 }
