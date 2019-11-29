@@ -92,9 +92,6 @@ func main() {
 	}
 
 	checkRDSInstallation()
-
-	fmtc.TPrintf("{s-}Starting…{!}")
-
 	generatePayload()
 }
 
@@ -141,6 +138,8 @@ func generatePayload() {
 	metaDir := options.GetS(OPT_DIR) + "/meta"
 	maxKey := options.GetI(OPT_KEYS)
 	ratio := options.GetI(OPT_RATIO)
+
+	fmtc.TPrintf("{s-}Starting…{!}")
 
 	for {
 		if time.Since(lastIDListUpdate) >= 5*time.Minute {
