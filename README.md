@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/rds-payload-generator.svg"/></a></p>
 
 <p align="center">
-  <a href="https://travis-ci.org/essentialkaos/rds-payload-generator"><img src="https://travis-ci.org/essentialkaos/rds-payload-generator.svg"></a>
+  <a href="https://travis-ci.com/essentialkaos/rds-payload-generator"><img src="https://travis-ci.com/essentialkaos/rds-payload-generator.svg"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/rds-payload-generator"><img src="https://goreportcard.com/badge/github.com/essentialkaos/rds-payload-generator"></a>
   <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
 </p>
@@ -61,8 +61,8 @@ Examples
 
 | Branch | Status |
 |------------|--------|
-| `master` | [![Build Status](https://travis-ci.org/essentialkaos/rds-payload-generator.svg?branch=master)](https://travis-ci.org/essentialkaos/rds-payload-generator) |
-| `develop` | [![Build Status](https://travis-ci.org/essentialkaos/rds-payload-generator.svg?branch=develop)](https://travis-ci.org/essentialkaos/rds-payload-generator) |
+| `master` | [![Build Status](https://travis-ci.com/essentialkaos/rds-payload-generator.svg?branch=master)](https://travis-ci.com/essentialkaos/rds-payload-generator) |
+| `develop` | [![Build Status](https://travis-ci.com/essentialkaos/rds-payload-generator.svg?branch=develop)](https://travis-ci.com/essentialkaos/rds-payload-generator) |
 
 ### Contributing
 
