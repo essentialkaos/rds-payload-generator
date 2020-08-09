@@ -4,7 +4,7 @@
   <a href="https://travis-ci.com/essentialkaos/rds-payload-generator"><img src="https://travis-ci.com/essentialkaos/rds-payload-generator.svg"></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/rds-payload-generator"><img src="https://goreportcard.com/badge/github.com/essentialkaos/rds-payload-generator"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-rds-payload-generator-master"><img alt="codebeat badge" src="https://codebeat.co/badges/ddab93a0-a00f-4922-8430-09106383ddba" /></a>
-  <a href="https://essentialkaos.com/ekol"><img src="https://gh.kaos.st/ekol.svg"></a>
+  <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
 <p align="center"><a href="#installation">Installation</a> • <a href="#usage">Usage</a> • <a href="#build-status">Build Status</a> • <a href="#contributing">Contributing</a> • <a href="#license">License</a></p>
@@ -73,6 +73,6 @@ Before contributing to this project please read our [Contributing Guidelines](ht
 
 ### License
 
-[EKOL](https://essentialkaos.com/ekol)
+[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 <p align="center"><a href="https://essentialkaos.com"><img src="https://gh.kaos.st/ekgh.svg"/></a></p>
