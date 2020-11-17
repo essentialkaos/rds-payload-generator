@@ -1,7 +1,7 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/rds-payload-generator.svg"/></a></p>
 
 <p align="center">
-  <a href="https://travis-ci.com/essentialkaos/rds-payload-generator"><img src="https://travis-ci.com/essentialkaos/rds-payload-generator.svg"></a>
+  <a href="https://github.com/essentialkaos/rds-payload-generator/actions"><img src="https://github.com/essentialkaos/rds-payload-generator/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
   <a href="https://goreportcard.com/report/github.com/essentialkaos/rds-payload-generator"><img src="https://goreportcard.com/badge/github.com/essentialkaos/rds-payload-generator"></a>
   <a href="https://codebeat.co/projects/github-com-essentialkaos-rds-payload-generator-master"><img alt="codebeat badge" src="https://codebeat.co/badges/ddab93a0-a00f-4922-8430-09106383ddba" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
@@ -17,13 +17,7 @@
 
 #### From source
 
-Before the initial install allows git to use redirects for [pkg.re](https://github.com/essentialkaos/pkgre) service (reason why you should do this described [here](https://github.com/essentialkaos/pkgre#git-support)):
-
-```
-git config --global http.https://pkg.re.followRedirects true
-```
-
-To build the RDS Payload Generator from scratch, make sure you have a working Go 1.12+ workspace ([instructions](https://golang.org/doc/install)), then:
+To build the RDS Payload Generator from scratch, make sure you have a working Go 1.14+ workspace ([instructions](https://golang.org/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/rds-payload-generator
@@ -64,8 +58,8 @@ Examples
 
 | Branch | Status |
 |------------|--------|
-| `master` | [![Build Status](https://travis-ci.com/essentialkaos/rds-payload-generator.svg?branch=master)](https://travis-ci.com/essentialkaos/rds-payload-generator) |
-| `develop` | [![Build Status](https://travis-ci.com/essentialkaos/rds-payload-generator.svg?branch=develop)](https://travis-ci.com/essentialkaos/rds-payload-generator) |
+| `master` | [![CI](https://github.com/essentialkaos/rds-payload-generator/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/rds-payload-generator/actions) |
+| `develop` | [![CI](https://github.com/essentialkaos/rds-payload-generator/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/rds-payload-generator/actions) |
 
 ### Contributing
 
