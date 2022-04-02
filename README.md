@@ -20,13 +20,7 @@
 To build the RDS Payload Generator from scratch, make sure you have a working Go 1.17+ workspace ([instructions](https://go.dev/doc/install)), then:
 
 ```
-go get github.com/essentialkaos/rds-payload-generator
-```
-
-If you want to update RDS Payload Generator to latest stable release, do:
-
-```
-go get -u github.com/essentialkaos/rds-payload-generator
+go install github.com/essentialkaos/rds-payload-generator
 ```
 
 #### Prebuilt binaries
