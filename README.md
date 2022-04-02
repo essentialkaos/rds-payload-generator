@@ -1,9 +1,9 @@
 <p align="center"><a href="#readme"><img src="https://gh.kaos.st/rds-payload-generator.svg"/></a></p>
 
 <p align="center">
-  <a href="https://github.com/essentialkaos/rds-payload-generator/actions"><img src="https://github.com/essentialkaos/rds-payload-generator/workflows/CI/badge.svg" alt="GitHub Actions Status" /></a>
-  <a href="https://goreportcard.com/report/github.com/essentialkaos/rds-payload-generator"><img src="https://goreportcard.com/badge/github.com/essentialkaos/rds-payload-generator"></a>
-  <a href="https://codebeat.co/projects/github-com-essentialkaos-rds-payload-generator-master"><img alt="codebeat badge" src="https://codebeat.co/badges/ddab93a0-a00f-4922-8430-09106383ddba" /></a>
+  <a href="https://kaos.sh/w/rds-payload-generator/ci"><img src="https://kaos.sh/w/rds-payload-generator/ci.svg" alt="GitHub Actions CI Status" /></a>
+  <a href="https://kaos.sh/r/rds-payload-generator"><img src="https://kaos.sh/r/rds-payload-generator.svg" alt="GoReportCard" /></a>
+  <a href="https://kaos.sh/b/rds-payload-generator"><img src="https://kaos.sh/b/ddab93a0-a00f-4922-8430-09106383ddba.svg" alt="Codebeat badge" /></a>
   <a href="#license"><img src="https://gh.kaos.st/apache2.svg"></a>
 </p>
 
@@ -17,7 +17,7 @@
 
 #### From source
 
-To build the RDS Payload Generator from scratch, make sure you have a working Go 1.14+ workspace ([instructions](https://golang.org/doc/install)), then:
+To build the RDS Payload Generator from scratch, make sure you have a working Go 1.17+ workspace ([instructions](https://go.dev/doc/install)), then:
 
 ```
 go get github.com/essentialkaos/rds-payload-generator
@@ -31,7 +31,7 @@ go get -u github.com/essentialkaos/rds-payload-generator
 
 #### Prebuilt binaries
 
-You can download prebuilt binaries for Linux and OS X from [EK Apps Repository](https://apps.kaos.st/rds-payload-generator/latest).
+You can download prebuilt binaries for Linux and macOS from [EK Apps Repository](https://apps.kaos.st/rds-payload-generator/latest).
 
 ### Usage
 
@@ -57,9 +57,9 @@ Examples
 ### Build Status
 
 | Branch | Status |
-|------------|--------|
-| `master` | [![CI](https://github.com/essentialkaos/rds-payload-generator/workflows/CI/badge.svg?branch=master)](https://github.com/essentialkaos/rds-payload-generator/actions) |
-| `develop` | [![CI](https://github.com/essentialkaos/rds-payload-generator/workflows/CI/badge.svg?branch=develop)](https://github.com/essentialkaos/rds-payload-generator/actions) |
+|--------|--------|
+| `master` | [![CI](https://kaos.sh/w/rds-payload-generator/ci.svg?branch=master)](https://kaos.sh/w/rds-payload-generator/ci?query=branch:master) |
+| `develop` | [![CI](https://kaos.sh/w/rds-payload-generator/ci.svg?branch=develop)](https://kaos.sh/w/rds-payload-generator/ci?query=branch:develop) |
 
 ### Contributing
 

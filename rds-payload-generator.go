@@ -2,7 +2,7 @@ package main
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2020 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2022 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -13,14 +13,14 @@ import (
 	"strconv"
 	"time"
 
-	"pkg.re/essentialkaos/ek.v11/fmtc"
-	"pkg.re/essentialkaos/ek.v11/fmtutil"
-	"pkg.re/essentialkaos/ek.v11/fsutil"
-	"pkg.re/essentialkaos/ek.v11/options"
-	"pkg.re/essentialkaos/ek.v11/rand"
-	"pkg.re/essentialkaos/ek.v11/usage"
+	"github.com/essentialkaos/ek/v12/fmtc"
+	"github.com/essentialkaos/ek/v12/fmtutil"
+	"github.com/essentialkaos/ek/v12/fsutil"
+	"github.com/essentialkaos/ek/v12/options"
+	"github.com/essentialkaos/ek/v12/rand"
+	"github.com/essentialkaos/ek/v12/usage"
 
-	"pkg.re/essentialkaos/redy.v4"
+	"github.com/essentialkaos/redy/v4"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -28,7 +28,7 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "1.1.0"
+	VER  = "1.1.1"
 	DESC = "Payload generator for Redis-Split"
 )
 
