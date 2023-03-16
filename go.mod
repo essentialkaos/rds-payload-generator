@@ -3,7 +3,7 @@ module github.com/essentialkaos/rds-payload-generator
 go 1.17
 
 require (
-	github.com/essentialkaos/ek/v12 v12.62.0
+	github.com/essentialkaos/ek/v12 v12.63.0
 	github.com/essentialkaos/redy/v4 v4.3.2
 )
 
