@@ -35,7 +35,7 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "1.1.2"
+	VER  = "1.1.3"
 	DESC = "Payload generator for Redis-Split"
 )
 
