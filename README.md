@@ -25,7 +25,11 @@ go install github.com/essentialkaos/rds-payload-generator@latest
 
 #### Prebuilt binaries
 
-You can download prebuilt binaries for Linux and macOS from [EK Apps Repository](https://apps.kaos.st/rds-payload-generator/latest).
+You can download prebuilt binaries for Linux and macOS from [EK Apps Repository](https://apps.kaos.st/rds-payload-generator/latest):
+
+```bash
+bash <(curl -fsSL https://apps.kaos.st/get) rds-payload-generator
+```
 
 ### Usage
 
