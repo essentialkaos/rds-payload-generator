@@ -1,0 +1,9 @@
+[files]
+extend-exclude = [
+  "go.sum",
+]
+
+[default.extend-identifiers]
+O_WRONLY = "O_WRONLY"
+Redy = "Redy"
+redy = "redy"
