@@ -35,7 +35,7 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "1.1.3"
+	VER  = "1.2.0"
 	DESC = "Payload generator for Redis-Split"
 )
 
@@ -66,7 +66,7 @@ type RedisStore struct {
 // ////////////////////////////////////////////////////////////////////////////////// //
 
 var optMap = options.Map{
-	OPT_DIR:      {Value: "/opt/redis-split"},
+	OPT_DIR:      {},
 	OPT_KEYS:     {Type: options.INT, Value: 5000, Min: 10, Max: 1000000},
 	OPT_RATIO:    {Type: options.INT, Value: 4, Min: 1, Max: 100},
 	OPT_NO_COLOR: {Type: options.BOOL},
@@ -150,31 +150,19 @@ func configureUI() {
 
 // checkRDSInstallation checks Redis-Split installation
 func checkRDSInstallation() {
-	rdsDir := options.GetS(OPT_DIR)
+	rdsDir := getRDSMainDir()
+	err := fsutil.ValidatePerms("DRX", rdsDir)
+
+	if err != nil {
+		printError(err.Error())
+		os.Exit(1)
+	}
+
 	metaDir := rdsDir + "/meta"
+	err = fsutil.ValidatePerms("DRX", metaDir)
 
-	if !fsutil.IsExist(rdsDir) {
-		printError("Directory %s doesn't exist", rdsDir)
-		os.Exit(1)
-	}
-
-	if !fsutil.IsExist(metaDir) {
-		printError("Directory %s doesn't exist", metaDir)
-		os.Exit(1)
-	}
-
-	if !fsutil.IsDir(rdsDir) {
-		printError("%s is not a directory", metaDir)
-		os.Exit(1)
-	}
-
-	if !fsutil.IsDir(metaDir) {
-		printError("%s is not a directory", metaDir)
-		os.Exit(1)
-	}
-
-	if fsutil.IsEmptyDir(metaDir) {
-		printError("No instances are created")
+	if err != nil {
+		printError(err.Error())
 		os.Exit(1)
 	}
 }
@@ -188,7 +176,7 @@ func generatePayload() {
 	var reads, writes int64
 
 	store := &RedisStore{make(map[string]*redy.Client)}
-	metaDir := options.GetS(OPT_DIR) + "/meta"
+	metaDir := getRDSMainDir() + "/meta"
 	maxKey := options.GetI(OPT_KEYS)
 	ratio := options.GetI(OPT_RATIO)
 
@@ -230,6 +218,20 @@ func generatePayload() {
 	}
 }
 
+// getRDSMainDir returns path to main Redis-Split directory
+func getRDSMainDir() string {
+	return fsutil.ProperPath("DRX",
+		[]string{
+			options.GetS(OPT_DIR),
+			"/opt/redis-split",
+			"/srv/redis-split",
+			"/srv2/redis-split",
+			"/srv3/redis-split",
+			"/srv4/redis-split",
+		},
+	)
+}
+
 // getPause returns pause between requests
 func getPause() time.Duration {
 	r := 0.001 * float64(rand.Int(25))
@@ -243,7 +245,7 @@ func getKey(max int) string {
 
 // isInstanceWorks returns true if instance is works
 func isInstanceWorks(id string) bool {
-	pidDir := options.GetS(OPT_DIR) + "/pid"
+	pidDir := getRDSMainDir() + "/pid"
 	pidFile := fmt.Sprintf("%s/%s.pid", pidDir, id)
 
 	return fsutil.IsExist(pidFile)
@@ -326,9 +328,9 @@ func printMan() {
 func genUsage() *usage.Info {
 	info := usage.NewInfo()
 
-	info.AddOption(OPT_DIR, "Redis-Split main dir", "dir")
+	info.AddOption(OPT_DIR, "Path to Redis-Split main dir", "dir")
 	info.AddOption(OPT_KEYS, "Number of keys {s-}(10-1000000 default: 5000){!}")
-	info.AddOption(OPT_RATIO, "Writes/reads ration {s-}(1-100 default: 4){!}")
+	info.AddOption(OPT_RATIO, "Writes/reads ratio {s-}(1-100 default: 4){!}")
 	info.AddOption(OPT_NO_COLOR, "Disable colors in output")
 	info.AddOption(OPT_HELP, "Show this help message")
 	info.AddOption(OPT_VER, "Show version")
