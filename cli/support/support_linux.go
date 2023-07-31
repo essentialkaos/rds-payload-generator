@@ -82,8 +82,8 @@ func showEnvInfo(pkgs Pkgs) {
 // collectEnvInfo collects info about packages
 func collectEnvInfo() Pkgs {
 	return Pkgs{
-		getPackageInfo("redis"),
-		getPackageInfo("redis-client"),
+		getPackageInfo("redis", "redis5", "redis6", "redis7"),
+		getPackageInfo("redis-cli", "redis5-cli", "redis6-cli", "redis7-cli"),
 		getPackageInfo("redis-split"),
 		getPackageInfo("redis-split-sync"),
 	}
