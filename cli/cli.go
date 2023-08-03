@@ -35,8 +35,8 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "1.2.0"
-	DESC = "Payload generator for Redis-Split"
+	VER  = "2.0.0"
+	DESC = "Payload generator for RDS"
 )
 
 // Supported command line options
@@ -44,6 +44,7 @@ const (
 	OPT_DIR      = "d:dir"
 	OPT_KEYS     = "k:keys"
 	OPT_RATIO    = "r:ratio"
+	OPT_PAUSE    = "p:pause"
 	OPT_NO_COLOR = "nc:no-color"
 	OPT_HELP     = "h:help"
 	OPT_VER      = "v:version"
@@ -55,6 +56,9 @@ const (
 
 // START_PORT start port
 const START_PORT = 63000
+
+// UI_REFRESH user interface refresh delay
+const UI_REFRESH = 50 * time.Millisecond
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -69,6 +73,7 @@ var optMap = options.Map{
 	OPT_DIR:      {},
 	OPT_KEYS:     {Type: options.INT, Value: 5000, Min: 10, Max: 1000000},
 	OPT_RATIO:    {Type: options.INT, Value: 4, Min: 1, Max: 100},
+	OPT_PAUSE:    {Type: options.INT, Value: 15, Min: 1, Max: 1000},
 	OPT_NO_COLOR: {Type: options.BOOL},
 	OPT_HELP:     {Type: options.BOOL},
 	OPT_VER:      {Type: options.BOOL},
@@ -132,7 +137,10 @@ func preConfigureUI() {
 		}
 	}
 
-	if !fsutil.IsCharacterDevice("/dev/stdout") && os.Getenv("FAKETTY") == "" {
+	// Check for output redirect using pipes
+	if fsutil.IsCharacterDevice("/dev/stdin") &&
+		!fsutil.IsCharacterDevice("/dev/stdout") &&
+		os.Getenv("FAKETTY") == "" {
 		fmtc.DisableColors = true
 	}
 
@@ -148,7 +156,7 @@ func configureUI() {
 	}
 }
 
-// checkRDSInstallation checks Redis-Split installation
+// checkRDSInstallation checks RDS installation
 func checkRDSInstallation() {
 	rdsDir := getRDSMainDir()
 	err := fsutil.ValidatePerms("DRX", rdsDir)
@@ -178,7 +186,9 @@ func generatePayload() {
 	store := &RedisStore{make(map[string]*redy.Client)}
 	metaDir := getRDSMainDir() + "/meta"
 	maxKey := options.GetI(OPT_KEYS)
-	ratio := options.GetI(OPT_RATIO)
+	ratio := options.GetI(OPT_RATIO) + 1
+	pause := getPause()
+	lastUIUpdate := time.Now()
 
 	fmtc.TPrintf("{s-}Starting…{!}")
 
@@ -189,7 +199,7 @@ func generatePayload() {
 			lastIDListUpdate = time.Now()
 		}
 
-		time.Sleep(getPause())
+		time.Sleep(pause)
 
 		instanceID := ids[rand.Int(num)]
 
@@ -203,38 +213,42 @@ func generatePayload() {
 
 		switch rand.Int(ratio) {
 		case 0:
-			client.Cmd("SET", key)
+			client.Cmd("SET", key, "X")
 			writes++
 		default:
 			client.Cmd("GET", key)
 			reads++
 		}
 
-		fmtc.TPrintf(
-			"{s}[{!} {c}↑ %s{!} {s}|{!} {m}↓ %s{!} {s}]{!}",
-			fmtutil.PrettyNum(writes),
-			fmtutil.PrettyNum(reads),
-		)
+		if time.Since(lastUIUpdate) >= UI_REFRESH {
+			fmtc.TPrintf(
+				"{s}[{!} {c}{*}↑{!*} %s{!} {s}|{!} {m}{*}↓{!*} %s{!} {s}]{!}",
+				fmtutil.PrettyNum(writes),
+				fmtutil.PrettyNum(reads),
+			)
+
+			lastUIUpdate = time.Now()
+		}
 	}
 }
 
-// getRDSMainDir returns path to main Redis-Split directory
+// getRDSMainDir returns path to main RDS directory
 func getRDSMainDir() string {
 	return fsutil.ProperPath("DRX",
 		[]string{
 			options.GetS(OPT_DIR),
-			"/opt/redis-split",
-			"/srv/redis-split",
-			"/srv2/redis-split",
-			"/srv3/redis-split",
-			"/srv4/redis-split",
+			"/opt/rds",
+			"/srv/rds",
+			"/srv2/rds",
+			"/srv3/rds",
+			"/srv4/rds",
 		},
 	)
 }
 
 // getPause returns pause between requests
 func getPause() time.Duration {
-	r := 0.001 * float64(rand.Int(25))
+	r := 0.001 * float64(rand.Int(options.GetI(OPT_PAUSE)))
 	return time.Duration(r * float64(time.Second))
 }
 
@@ -328,15 +342,16 @@ func printMan() {
 func genUsage() *usage.Info {
 	info := usage.NewInfo()
 
-	info.AddOption(OPT_DIR, "Path to Redis-Split main dir", "dir")
-	info.AddOption(OPT_KEYS, "Number of keys {s-}(10-1000000 default: 5000){!}")
-	info.AddOption(OPT_RATIO, "Writes/reads ratio {s-}(1-100 default: 4){!}")
+	info.AddOption(OPT_DIR, "Path to RDS main dir", "dir")
+	info.AddOption(OPT_KEYS, "Number of keys {s-}(10-1000000 | default: 5000){!}")
+	info.AddOption(OPT_RATIO, "Writes/reads ratio {s-}(1-100 | default: 4){!}")
+	info.AddOption(OPT_PAUSE, "Max pause between requests in ms {s-}(1-1000 | default: 15){!}")
 	info.AddOption(OPT_NO_COLOR, "Disable colors in output")
 	info.AddOption(OPT_HELP, "Show this help message")
 	info.AddOption(OPT_VER, "Show version")
 
 	info.AddExample(
-		"-d /srv/redis-split -k 35000 -r 10",
+		"-d /srv/rds -k 35000 -r 10",
 		"Run tool with custom settings",
 	)
 
