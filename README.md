@@ -11,7 +11,7 @@
 
 <br/>
 
-`rds-payload-generator` is simple payload generator for [Redis-Split](https://github.com/essentialkaos/rds).
+`rds-payload-generator` is simple payload generator for [RDS](https://kaos.sh/rds).
 
 ### Installation
 
@@ -38,18 +38,18 @@ Usage: rds-payload-generator {options}
 
 Options
 
-  --dir, -d dir      Redis-Split main dir
-  --keys, -k         Number of keys (10-1000000 default: 5000)
-  --ratio, -r        Writes/reads ration (1-100 default: 4)
+  --dir, -d dir      Path to RDS main dir
+  --keys, -k         Number of keys (10-1000000 | default: 5000)
+  --ratio, -r        Writes/reads ratio (1-100 | default: 4)
+  --pause, -p        Max pause between requests in ms (1-1000 | default: 15)
   --no-color, -nc    Disable colors in output
   --help, -h         Show this help message
   --version, -v      Show version
 
 Examples
 
-  rds-payload-generator -d /srv/redis-split -k 35000 -r 10
+  rds-payload-generator -d /srv/rds -k 35000 -r 10
   Run tool with custom settings
-
 ```
 
 ### Build Status
