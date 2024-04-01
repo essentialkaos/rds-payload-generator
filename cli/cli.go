@@ -2,7 +2,7 @@ package cli
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 //                                                                                    //
-//                         Copyright (c) 2023 ESSENTIAL KAOS                          //
+//                         Copyright (c) 2024 ESSENTIAL KAOS                          //
 //      Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>     //
 //                                                                                    //
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -10,6 +10,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -19,15 +20,19 @@ import (
 	"github.com/essentialkaos/ek/v12/fsutil"
 	"github.com/essentialkaos/ek/v12/options"
 	"github.com/essentialkaos/ek/v12/rand"
+	"github.com/essentialkaos/ek/v12/strutil"
+	"github.com/essentialkaos/ek/v12/support"
+	"github.com/essentialkaos/ek/v12/support/deps"
+	"github.com/essentialkaos/ek/v12/support/pkgs"
+	"github.com/essentialkaos/ek/v12/terminal/tty"
 	"github.com/essentialkaos/ek/v12/usage"
 	"github.com/essentialkaos/ek/v12/usage/completion/bash"
 	"github.com/essentialkaos/ek/v12/usage/completion/fish"
 	"github.com/essentialkaos/ek/v12/usage/completion/zsh"
 	"github.com/essentialkaos/ek/v12/usage/man"
+	"github.com/essentialkaos/ek/v12/usage/update"
 
 	"github.com/essentialkaos/redy/v4"
-
-	"github.com/essentialkaos/rds-payload-generator/cli/support"
 )
 
 // ////////////////////////////////////////////////////////////////////////////////// //
@@ -35,9 +40,11 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "2.0.0"
+	VER  = "2.0.1"
 	DESC = "Payload generator for RDS"
 )
+
+// ////////////////////////////////////////////////////////////////////////////////// //
 
 // Supported command line options
 const (
@@ -69,6 +76,7 @@ type RedisStore struct {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// optMap is map with supported options
 var optMap = options.Map{
 	OPT_DIR:      {},
 	OPT_KEYS:     {Type: options.INT, Value: 5000, Min: 10, Max: 1000000},
@@ -76,12 +84,18 @@ var optMap = options.Map{
 	OPT_PAUSE:    {Type: options.INT, Value: 15, Min: 1, Max: 1000},
 	OPT_NO_COLOR: {Type: options.BOOL},
 	OPT_HELP:     {Type: options.BOOL},
-	OPT_VER:      {Type: options.BOOL},
+	OPT_VER:      {Type: options.MIXED},
 
 	OPT_VERB_VER:     {Type: options.BOOL},
 	OPT_COMPLETION:   {},
 	OPT_GENERATE_MAN: {Type: options.BOOL},
 }
+
+// colorTagApp contains color tag for app name
+var colorTagApp string
+
+// colorTagVer contains color tag for app version
+var colorTagVer string
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
@@ -111,7 +125,12 @@ func Run(gitRev string, gomod []byte) {
 		genAbout(gitRev).Print()
 		os.Exit(0)
 	case options.GetB(OPT_VERB_VER):
-		support.Print(APP, VER, gitRev, gomod)
+		support.Collect(APP, VER).
+			WithRevision(gitRev).
+			WithDeps(deps.Extract(gomod)).
+			WithPackages(pkgs.Collect("rds", "rds-sync")).
+			WithApps(getRedisVersionInfo()).
+			Print()
 		os.Exit(0)
 	case options.GetB(OPT_HELP):
 		genUsage().Print()
@@ -124,28 +143,17 @@ func Run(gitRev string, gomod []byte) {
 
 // preConfigureUI preconfigures UI based on information about user terminal
 func preConfigureUI() {
-	term := os.Getenv("TERM")
-
-	fmtc.DisableColors = true
-
-	if term != "" {
-		switch {
-		case strings.Contains(term, "xterm"),
-			strings.Contains(term, "color"),
-			term == "screen":
-			fmtc.DisableColors = false
-		}
-	}
-
-	// Check for output redirect using pipes
-	if fsutil.IsCharacterDevice("/dev/stdin") &&
-		!fsutil.IsCharacterDevice("/dev/stdout") &&
-		os.Getenv("FAKETTY") == "" {
+	if !tty.IsTTY() {
 		fmtc.DisableColors = true
 	}
 
-	if os.Getenv("NO_COLOR") != "" {
-		fmtc.DisableColors = true
+	switch {
+	case fmtc.IsTrueColorSupported():
+		colorTagApp, colorTagVer = "{*}{#DC382C}", "{#A32422}"
+	case fmtc.Is256ColorsSupported():
+		colorTagApp, colorTagVer = "{*}{#160}", "{#124}"
+	default:
+		colorTagApp, colorTagVer = "{r*}", "{r}"
 	}
 }
 
@@ -310,17 +318,32 @@ func (rs *RedisStore) Remove(id string) {
 
 // ////////////////////////////////////////////////////////////////////////////////// //
 
+// getRedisVersionInfo returns info about Redis version
+func getRedisVersionInfo() support.App {
+	cmd := exec.Command("redis-server", "--version")
+	output, err := cmd.Output()
+
+	if err != nil {
+		return support.App{"Redis", ""}
+	}
+
+	ver := strutil.ReadField(string(output), 2, false, ' ')
+	ver = strings.TrimLeft(ver, "v=")
+
+	return support.App{"Redis", ver}
+}
+
 // printCompletion prints completion for given shell
 func printCompletion() int {
 	info := genUsage()
 
 	switch options.GetS(OPT_COMPLETION) {
 	case "bash":
-		fmt.Printf(bash.Generate(info, "rds-payload-generator"))
+		fmt.Print(bash.Generate(info, "rds-payload-generator"))
 	case "fish":
-		fmt.Printf(fish.Generate(info, "rds-payload-generator"))
+		fmt.Print(fish.Generate(info, "rds-payload-generator"))
 	case "zsh":
-		fmt.Printf(zsh.Generate(info, optMap, "rds-payload-generator"))
+		fmt.Print(zsh.Generate(info, optMap, "rds-payload-generator"))
 	default:
 		return 1
 	}
@@ -341,6 +364,8 @@ func printMan() {
 // genUsage generates usage info
 func genUsage() *usage.Info {
 	info := usage.NewInfo()
+
+	info.AppNameColorTag = colorTagApp
 
 	info.AddOption(OPT_DIR, "Path to RDS main dir", "dir")
 	info.AddOption(OPT_KEYS, "Number of keys {s-}(10-1000000 | default: 5000){!}")
@@ -367,10 +392,18 @@ func genAbout(gitRev string) *usage.About {
 		Year:    2006,
 		Owner:   "ESSENTIAL KAOS",
 		License: "Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>",
+
+		AppNameColorTag: colorTagApp,
+		VersionColorTag: colorTagVer,
+		DescSeparator:   "{s}—{!}",
 	}
 
 	if gitRev != "" {
 		about.Build = "git:" + gitRev
+		about.UpdateChecker = usage.UpdateChecker{
+			"essentialkaos/rds-payload-generator",
+			update.GitHubChecker,
+		}
 	}
 
 	return about
