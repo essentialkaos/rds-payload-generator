@@ -24,6 +24,7 @@ import (
 	"github.com/essentialkaos/ek/v12/support"
 	"github.com/essentialkaos/ek/v12/support/deps"
 	"github.com/essentialkaos/ek/v12/support/pkgs"
+	"github.com/essentialkaos/ek/v12/terminal"
 	"github.com/essentialkaos/ek/v12/terminal/tty"
 	"github.com/essentialkaos/ek/v12/usage"
 	"github.com/essentialkaos/ek/v12/usage/completion/bash"
@@ -40,7 +41,7 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "2.0.1"
+	VER  = "2.0.2"
 	DESC = "Payload generator for RDS"
 )
 
@@ -105,11 +106,9 @@ func Run(gitRev string, gomod []byte) {
 
 	_, errs := options.Parse(optMap)
 
-	if len(errs) != 0 {
-		for _, err := range errs {
-			printError(err.Error())
-		}
-
+	if !errs.IsEmpty() {
+		terminal.Error("Options parsing errors:")
+		terminal.Error(errs.String())
 		os.Exit(1)
 	}
 
@@ -170,7 +169,7 @@ func checkRDSInstallation() {
 	err := fsutil.ValidatePerms("DRX", rdsDir)
 
 	if err != nil {
-		printError(err.Error())
+		terminal.Error(err)
 		os.Exit(1)
 	}
 
@@ -178,7 +177,7 @@ func checkRDSInstallation() {
 	err = fsutil.ValidatePerms("DRX", metaDir)
 
 	if err != nil {
-		printError(err.Error())
+		terminal.Error(err)
 		os.Exit(1)
 	}
 }
@@ -271,11 +270,6 @@ func isInstanceWorks(id string) bool {
 	pidFile := fmt.Sprintf("%s/%s.pid", pidDir, id)
 
 	return fsutil.IsExist(pidFile)
-}
-
-// printError prints error message to console
-func printError(f string, a ...interface{}) {
-	fmtc.Fprintf(os.Stderr, "{r}"+f+"{!}\n", a...)
 }
 
 // ////////////////////////////////////////////////////////////////////////////////// //
