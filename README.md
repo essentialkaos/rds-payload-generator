@@ -2,7 +2,6 @@
 
 <p align="center">
   <a href="https://kaos.sh/w/rds-payload-generator/ci"><img src="https://kaos.sh/w/rds-payload-generator/ci.svg" alt="GitHub Actions CI Status" /></a>
-  <a href="https://kaos.sh/r/rds-payload-generator"><img src="https://kaos.sh/r/rds-payload-generator.svg" alt="GoReportCard" /></a>
   <a href="https://kaos.sh/b/rds-payload-generator"><img src="https://kaos.sh/b/ddab93a0-a00f-4922-8430-09106383ddba.svg" alt="Codebeat badge" /></a>
   <a href="#license"><img src=".github/images/license.svg"/></a>
 </p>
@@ -33,7 +32,7 @@ bash <(curl -fsSL https://apps.kaos.st/get) rds-payload-generator
 
 ### Usage
 
-<p align="center"><img src=".github/images/usage.svg"/></p>
+<img src=".github/images/usage.svg"/>
 
 ### CI Status
 
