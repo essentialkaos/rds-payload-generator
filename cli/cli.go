@@ -9,29 +9,29 @@ package cli
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/essentialkaos/ek/v12/fmtc"
-	"github.com/essentialkaos/ek/v12/fmtutil"
-	"github.com/essentialkaos/ek/v12/fsutil"
-	"github.com/essentialkaos/ek/v12/options"
-	"github.com/essentialkaos/ek/v12/rand"
-	"github.com/essentialkaos/ek/v12/strutil"
-	"github.com/essentialkaos/ek/v12/support"
-	"github.com/essentialkaos/ek/v12/support/deps"
-	"github.com/essentialkaos/ek/v12/support/pkgs"
-	"github.com/essentialkaos/ek/v12/terminal"
-	"github.com/essentialkaos/ek/v12/terminal/tty"
-	"github.com/essentialkaos/ek/v12/usage"
-	"github.com/essentialkaos/ek/v12/usage/completion/bash"
-	"github.com/essentialkaos/ek/v12/usage/completion/fish"
-	"github.com/essentialkaos/ek/v12/usage/completion/zsh"
-	"github.com/essentialkaos/ek/v12/usage/man"
-	"github.com/essentialkaos/ek/v12/usage/update"
+	"github.com/essentialkaos/ek/v13/fmtc"
+	"github.com/essentialkaos/ek/v13/fmtutil"
+	"github.com/essentialkaos/ek/v13/fsutil"
+	"github.com/essentialkaos/ek/v13/options"
+	"github.com/essentialkaos/ek/v13/strutil"
+	"github.com/essentialkaos/ek/v13/support"
+	"github.com/essentialkaos/ek/v13/support/deps"
+	"github.com/essentialkaos/ek/v13/support/pkgs"
+	"github.com/essentialkaos/ek/v13/terminal"
+	"github.com/essentialkaos/ek/v13/terminal/tty"
+	"github.com/essentialkaos/ek/v13/usage"
+	"github.com/essentialkaos/ek/v13/usage/completion/bash"
+	"github.com/essentialkaos/ek/v13/usage/completion/fish"
+	"github.com/essentialkaos/ek/v13/usage/completion/zsh"
+	"github.com/essentialkaos/ek/v13/usage/man"
+	"github.com/essentialkaos/ek/v13/usage/update"
 
 	"github.com/essentialkaos/redy/v4"
 )
@@ -41,7 +41,7 @@ import (
 // Application info
 const (
 	APP  = "RDS Payload Generator"
-	VER  = "2.0.2"
+	VER  = "2.0.3"
 	DESC = "Payload generator for RDS"
 )
 
@@ -208,7 +208,7 @@ func generatePayload() {
 
 		time.Sleep(pause)
 
-		instanceID := ids[rand.Int(num)]
+		instanceID := ids[rand.Intn(num)]
 
 		if !isInstanceWorks(instanceID) {
 			store.Remove(instanceID)
@@ -218,7 +218,7 @@ func generatePayload() {
 		client := store.Get(instanceID)
 		key := getKey(maxKey)
 
-		switch rand.Int(ratio) {
+		switch rand.Intn(ratio) {
 		case 0:
 			client.Cmd("SET", key, "X")
 			writes++
@@ -255,13 +255,13 @@ func getRDSMainDir() string {
 
 // getPause returns pause between requests
 func getPause() time.Duration {
-	r := 0.001 * float64(rand.Int(options.GetI(OPT_PAUSE)))
+	r := 0.001 * float64(rand.Intn(options.GetI(OPT_PAUSE)))
 	return time.Duration(r * float64(time.Second))
 }
 
 // getKey returns key name with random suffix
 func getKey(max int) string {
-	return "KEY" + strconv.Itoa(rand.Int(max))
+	return "KEY" + strconv.Itoa(rand.Intn(max))
 }
 
 // isInstanceWorks returns true if instance is works
