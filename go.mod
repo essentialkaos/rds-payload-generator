@@ -1,9 +1,9 @@
 module github.com/essentialkaos/rds-payload-generator
 
-go 1.23.6
+go 1.23.10
 
 require (
-	github.com/essentialkaos/ek/v13 v13.31.3
+	github.com/essentialkaos/ek/v13 v13.32.0
 	github.com/essentialkaos/redy/v4 v4.4.1
 )
 
